@@ -1,0 +1,59 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue de films</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Catalogue de films</h1>
+    </header>
+
+    <main>
+
+        <section class="formulaire">
+            <h2>Ajouter un film</h2>
+
+            <form>
+                <label for="titre">Titre du film</label>
+                <input type="text" id="titre" name="titre" placeholder="Ex : Avatar">
+
+                <label for="date">Date de sortie</label>
+                <input type="date" id="date" name="date">
+
+                <label for="genre">Genre</label>
+                <select id="genre" name="genre">
+                    <option value="">Choisir un genre</option>
+                    <option value="Action">Action</option>
+                    <option value="Comédie">Comédie</option>
+                    <option value="Drame">Drame</option>
+                    <option value="Horreur">Horreur</option>
+                    <option value="Science-fiction">Science-fiction</option>
+                </select>
+
+                <label for="image">Image du film</label>
+                <input type="url" id="image" name="image" placeholder="https://...">
+
+                <button type="submit">Ajouter le film</button>
+            </form>
+        </section>
+
+        <section class="catalogue">
+            <h2>Liste des films</h2>
+
+            <div class="films">
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>
+```
