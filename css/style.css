@@ -1,3 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap");
+
+:root {
+    --fond: #17162a;
+    --surface: #211f3b;
+    --surface-haute: #2b2950;
+    --bordure: #3a3766;
+    --texte: #ece9f7;
+    --texte-doux: #a9a5c9;
+    --accent: #f2b84b;
+    --accent-fonce: #d99a26;
+    --focus: #5ad1bb;
+    --rayon: 14px;
+    --titre: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+    --corps: "DM Sans", "Segoe UI", Arial, sans-serif;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -5,90 +22,258 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    color: #222;
+    font-family: var(--corps);
+    background-color: var(--fond);
+    color: var(--texte);
+    line-height: 1.5;
+    min-height: 100vh;
 }
+
+/* ---------- En-tête (pellicule) ---------- */
 
 header {
-    background-color: #222;
-    color: white;
-    text-align: center;
-    padding: 30px;
+    position: relative;
+    padding: 56px 5% 64px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--bordure);
 }
 
+header h1 {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: var(--titre);
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+}
+
+/* perforations de pellicule */
+header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    height: 10px;
+    background: radial-gradient(circle, var(--fond) 3px, transparent 3.5px) 0 0 / 26px 10px repeat-x;
+    opacity: 0.9;
+}
+
+/* ---------- Mise en page ---------- */
+
 main {
-    width: 90%;
-    max-width: 1000px;
-    margin: 30px auto;
+    width: 92%;
+    max-width: 1200px;
+    margin: 40px auto 64px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+    align-items: start;
 }
 
 section {
-    background-color: white;
-    padding: 25px;
-    margin-bottom: 30px;
-    border-radius: 10px;
+    background-color: var(--surface);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    padding: 28px;
 }
 
 h2 {
+    font-family: var(--titre);
+    font-weight: 600;
+    font-size: 1.35rem;
     margin-bottom: 20px;
+}
+
+/* ---------- Formulaire ---------- */
+
+.formulaire {
+    position: sticky;
+    top: 24px;
 }
 
 form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
+}
+
+label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--texte-doux);
+    margin-top: 8px;
 }
 
 input,
 select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 11px 13px;
+    color: var(--texte);
+    background-color: var(--fond);
+    border: 1px solid var(--bordure);
+    border-radius: 10px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input::placeholder {
+    color: #6f6b99;
+}
+
+input[type="date"] {
+    color-scheme: dark;
+}
+
+input:hover,
+select:hover {
+    border-color: #55519a;
+}
+
+input:focus-visible,
+select:focus-visible,
+button:focus-visible {
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: 0 0 0 3px rgba(90, 209, 187, 0.3);
 }
 
 button {
-    padding: 12px;
+    margin-top: 18px;
+    padding: 13px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1d1500;
+    background-color: var(--accent);
     border: none;
-    border-radius: 5px;
-    background-color: #222;
-    color: white;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 button:hover {
-    background-color: #444;
+    background-color: var(--accent-fonce);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* ---------- Catalogue ---------- */
+
+#recherche {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    margin-bottom: 28px;
+    padding-left: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23a9a5c9' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 13px center;
 }
 
 .films {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 24px;
 }
 
 .film {
-    display: flex;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    position: relative;
     overflow: hidden;
-    background-color: #fafafa;
+    border-radius: var(--rayon);
+    background-color: var(--surface-haute);
+    border: 1px solid var(--bordure);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.film:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
 }
 
 .film img {
-    width: 150px;
-    height: 220px;
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    height: auto;
     object-fit: cover;
+    background-color: var(--fond);
+}
+
+.film-titre {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 40px 14px 12px;
+    font-family: var(--titre);
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    color: #fff;
+    background: linear-gradient(transparent, rgba(12, 11, 26, 0.92));
 }
 
 .film-infos {
-    padding: 20px;
+    padding: 12px 14px 14px;
 }
 
-.film h3 {
-    margin-bottom: 15px;
+.film-infos p {
+    margin-top: 2px;
+    font-size: 0.85rem;
+    color: var(--texte-doux);
 }
 
-.film p {
-    margin-top: 8px;
+.film-infos p:first-child {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+/* ---------- Bouton de suppression ---------- */
+
+.film-supprimer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    line-height: 1;
+    font-weight: 500;
+    color: #fff;
+    background-color: rgba(12, 11, 26, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+}
+
+.film-supprimer:hover {
+    background-color: #d64545;
+    border-color: #d64545;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .formulaire {
+        position: static;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
 }
