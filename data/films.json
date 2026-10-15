@@ -1,0 +1,62 @@
+[
+    {
+        "titre": "Inception",
+        "date": "2010-07-21",
+        "genre": "Science-fiction",
+        "image": "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
+    },
+    {
+        "titre": "Interstellar",
+        "date": "2014-11-05",
+        "genre": "Science-fiction",
+        "image": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
+    },
+    {
+        "titre": "The Dark Knight",
+        "date": "2008-08-13",
+        "genre": "Action",
+        "image": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"
+    },
+    {
+        "titre": "Avatar",
+        "date": "2009-12-16",
+        "genre": "Science-fiction",
+        "image": "https://image.tmdb.org/t/p/w500/kyeqWdyUXW608qlYkRqosgbbJyK.jpg"
+    },
+    {
+        "titre": "Parasite",
+        "date": "2019-06-05",
+        "genre": "Drame",
+        "image": "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"
+    },
+    {
+        "titre": "Get Out",
+        "date": "2017-05-03",
+        "genre": "Horreur",
+        "image": "https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg"
+    },
+    {
+        "titre": "Intouchables",
+        "date": "2011-11-02",
+        "genre": "Comédie",
+        "image": "https://image.tmdb.org/t/p/w500/1QU7HKgsQbGpzsJbJK4pAVQV9F5.jpg"
+    },
+    {
+        "titre": "Mad Max: Fury Road",
+        "date": "2015-05-14",
+        "genre": "Action",
+        "image": "https://image.tmdb.org/t/p/w500/hA2ple9q4qnwxp3hKVNhroipsir.jpg"
+    },
+    {
+        "titre": "Shining",
+        "date": "1980-10-16",
+        "genre": "Horreur",
+        "image": "https://image.tmdb.org/t/p/w500/xazWoLealQwEgqZ89MLZklLZD3k.jpg"
+    },
+    {
+        "titre": "Dune",
+        "date": "2021-09-15",
+        "genre": "Science-fiction",
+        "image": "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg"
+    }
+]

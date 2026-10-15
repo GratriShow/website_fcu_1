@@ -32,7 +32,7 @@ function chargerFilms() {
     try {
         const donnees = localStorage.getItem(CLE_STOCKAGE);
         if (!donnees) {
-            return;
+            return false;
         }
 
         const sauvegarde = JSON.parse(donnees);
@@ -43,8 +43,34 @@ function chargerFilms() {
             genres.push(sauvegarde.genres[i]);
             images.push(sauvegarde.images[i]);
         }
+
+        return true;
     } catch (erreur) {
         console.error('Impossible de lire les films sauvegardés :', erreur);
+        return false;
+    }
+}
+
+async function chargerFilmsDeBase() {
+    try {
+        const reponse = await fetch('data/films.json');
+
+        if (!reponse.ok) {
+            throw new Error(`Erreur HTTP ${reponse.status}`);
+        }
+
+        const films = await reponse.json();
+
+        for (let i = 0; i < films.length; i++) {
+            titres.push(films[i].titre);
+            dates.push(films[i].date);
+            genres.push(films[i].genre);
+            images.push(films[i].image);
+        }
+
+        sauvegarderFilms();
+    } catch (erreur) {
+        console.error('Impossible de charger data/films.json :', erreur);
     }
 }
 
@@ -220,6 +246,13 @@ container.addEventListener('click', event => {
 });
 
 
-chargerFilms();
-afficherFilms();
-afficherStats();
+async function demarrer() {
+    if (!chargerFilms()) {
+        await chargerFilmsDeBase();
+    }
+
+    afficherFilms();
+    afficherStats();
+}
+
+demarrer();
