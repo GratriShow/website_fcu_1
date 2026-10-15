@@ -4,9 +4,6 @@ const genres = [];
 const images = [];
 
 const CLE_STOCKAGE = 'catalogue-films';
-const CLE_FILMS_DE_BASE = 'catalogue-films-de-base';
-
-const AFFICHE = 'https://image.tmdb.org/t/p/w500/';
 
 const form = document.querySelector('form');
 const titreInput = document.querySelector('#titre');
@@ -48,42 +45,6 @@ function chargerFilms() {
         }
     } catch (erreur) {
         console.error('Impossible de lire les films sauvegardés :', erreur);
-    }
-}
-
-function ajouterFilmsDeBase() {
-    try {
-        if (localStorage.getItem(CLE_FILMS_DE_BASE)) {
-            return;
-        }
-    } catch (erreur) {
-        console.error('Impossible de lire le stockage :', erreur);
-    }
-
-    for (let i = 0; i < filmsDeBase.length; i++) {
-        const film = filmsDeBase[i];
-        let dejaPresent = false;
-
-        for (let j = 0; j < titres.length; j++) {
-            if (titres[j].toLowerCase() === film.titre.toLowerCase()) {
-                dejaPresent = true;
-            }
-        }
-
-        if (!dejaPresent) {
-            titres.push(film.titre);
-            dates.push(film.date);
-            genres.push(film.genre);
-            images.push(film.image);
-        }
-    }
-
-    sauvegarderFilms();
-
-    try {
-        localStorage.setItem(CLE_FILMS_DE_BASE, 'oui');
-    } catch (erreur) {
-        console.error('Impossible de sauvegarder les films :', erreur);
     }
 }
 
@@ -260,6 +221,5 @@ container.addEventListener('click', event => {
 
 
 chargerFilms();
-ajouterFilmsDeBase();
 afficherFilms();
 afficherStats();
