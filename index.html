@@ -10,7 +10,27 @@
 <body>
 
     <header>
-        <h1>Catalogue de films</h1>
+        <p class="surtitre">Catalogue de films · Programme</p>
+        <h1>Catalogue<br>de films</h1>
+
+        <ul class="stats">
+            <li>
+                <span class="stat-label">Films</span>
+                <span class="stat-valeur" id="stat-total">0</span>
+            </li>
+            <li>
+                <span class="stat-label">Genres</span>
+                <span class="stat-valeur" id="stat-genres">0</span>
+            </li>
+            <li>
+                <span class="stat-label">Genre principal</span>
+                <span class="stat-valeur" id="stat-top-genre">–</span>
+            </li>
+            <li>
+                <span class="stat-label">Dernière sortie</span>
+                <span class="stat-valeur" id="stat-recent">–</span>
+            </li>
+        </ul>
     </header>
 
     <main>
@@ -38,14 +58,17 @@
                 <label for="image">Image du film</label>
                 <input type="url" id="image" name="image" placeholder="https://...">
 
-                <button type="submit">Ajouter le film</button>
+                <p id="erreur" class="erreur" role="alert"></p>
+
+                <button type="submit">Ajouter au catalogue</button>
             </form>
         </section>
 
         <section class="catalogue">
-            <h2>Liste des films</h2>
-
-            <input type="search" id="recherche" placeholder="Rechercher un film...">
+            <div class="catalogue-entete">
+                <h2>À l'affiche</h2>
+                <input type="search" id="recherche" placeholder="Rechercher un titre">
+            </div>
 
             <div class="films">
             </div>

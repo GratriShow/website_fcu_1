@@ -1,122 +1,265 @@
-const form = document.querySelector('form');
+const titres = [];
+const dates = [];
+const genres = [];
+const images = [];
 
+const CLE_STOCKAGE = 'catalogue-films';
+const CLE_FILMS_DE_BASE = 'catalogue-films-de-base';
+
+const AFFICHE = 'https://image.tmdb.org/t/p/w500/';
+
+const form = document.querySelector('form');
 const titreInput = document.querySelector('#titre');
 const dateInput = document.querySelector('#date');
 const genreSelect = document.querySelector('#genre');
 const imageInput = document.querySelector('#image');
 const rechercheInput = document.querySelector('#recherche');
+const erreurElement = document.querySelector('#erreur');
+const container = document.querySelector('.films');
 
-const CLE_STOCKAGE = 'catalogue-films';
-
-function chargerFilms() {
-    try {
-        const donnees = localStorage.getItem(CLE_STOCKAGE);
-        return donnees ? JSON.parse(donnees) : [];
-    } catch (erreur) {
-        console.error('Impossible de lire les films sauvegardés :', erreur);
-        return [];
-    }
-}
 
 function sauvegarderFilms() {
     try {
-        localStorage.setItem(CLE_STOCKAGE, JSON.stringify(films));
+        localStorage.setItem(CLE_STOCKAGE, JSON.stringify({
+            titres: titres,
+            dates: dates,
+            genres: genres,
+            images: images
+        }));
     } catch (erreur) {
         console.error('Impossible de sauvegarder les films :', erreur);
     }
 }
 
-let films = chargerFilms();
+function chargerFilms() {
+    try {
+        const donnees = localStorage.getItem(CLE_STOCKAGE);
+        if (!donnees) {
+            return;
+        }
+
+        const sauvegarde = JSON.parse(donnees);
+
+        for (let i = 0; i < sauvegarde.titres.length; i++) {
+            titres.push(sauvegarde.titres[i]);
+            dates.push(sauvegarde.dates[i]);
+            genres.push(sauvegarde.genres[i]);
+            images.push(sauvegarde.images[i]);
+        }
+    } catch (erreur) {
+        console.error('Impossible de lire les films sauvegardés :', erreur);
+    }
+}
+
+function ajouterFilmsDeBase() {
+    try {
+        if (localStorage.getItem(CLE_FILMS_DE_BASE)) {
+            return;
+        }
+    } catch (erreur) {
+        console.error('Impossible de lire le stockage :', erreur);
+    }
+
+    for (let i = 0; i < filmsDeBase.length; i++) {
+        const film = filmsDeBase[i];
+        let dejaPresent = false;
+
+        for (let j = 0; j < titres.length; j++) {
+            if (titres[j].toLowerCase() === film.titre.toLowerCase()) {
+                dejaPresent = true;
+            }
+        }
+
+        if (!dejaPresent) {
+            titres.push(film.titre);
+            dates.push(film.date);
+            genres.push(film.genre);
+            images.push(film.image);
+        }
+    }
+
+    sauvegarderFilms();
+
+    try {
+        localStorage.setItem(CLE_FILMS_DE_BASE, 'oui');
+    } catch (erreur) {
+        console.error('Impossible de sauvegarder les films :', erreur);
+    }
+}
+
+function echapper(texte) {
+    return String(texte)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function valider(titre, date, genre, image) {
+    if (titre === '') {
+        return 'Le titre est obligatoire.';
+    } else if (!date) {
+        return 'La date de sortie est obligatoire.';
+    } else if (!genre) {
+        return 'Choisis un genre.';
+    } else if (!image) {
+        return "L'URL de l'image est obligatoire.";
+    }
+
+    for (let i = 0; i < titres.length; i++) {
+        if (titres[i].toLowerCase() === titre.toLowerCase()) {
+            return 'Ce film est déjà dans le catalogue.';
+        }
+    }
+
+    return '';
+}
 
 function ajouterFilm(event) {
     event.preventDefault();
 
-    const titre = titreInput.value;
+    const titre = titreInput.value.trim();
     const date = dateInput.value;
     const genre = genreSelect.value;
-    const image = imageInput.value;
+    const image = imageInput.value.trim();
 
-    const film = {
-        titre: titre,
-        date: date,
-        genre: genre,
-        image: image
-    };
+    const message = valider(titre, date, genre, image);
 
-    films.push(film);
+    if (message !== '') {
+        erreurElement.textContent = message;
+        return;
+    }
+
+    erreurElement.textContent = '';
+
+    titres.push(titre);
+    dates.push(date);
+    genres.push(genre);
+    images.push(image);
+
     sauvegarderFilms();
-
-    afficherFilms(films);
+    afficherFilms();
+    afficherStats();
 
     form.reset();
 }
 
-function afficherFilms(listeFilms) {
-    const container = document.querySelector('.films');
-    container.innerHTML = '';
+function afficherFilms() {
+    const recherche = rechercheInput.value.trim().toLowerCase();
+    const anneeCourante = new Date().getFullYear();
+    let html = '';
 
-    listeFilms.forEach(film => {
-        const filmElement = document.createElement('article');
-        filmElement.classList.add('film');
+    for (let i = 0; i < titres.length; i++) {
+        if (!titres[i].toLowerCase().includes(recherche)) {
+            continue;
+        }
 
-        const imageElement = document.createElement('img');
-        imageElement.src = film.image;
-        imageElement.alt = `Affiche du film ${film.titre}`;
+        const annee = Number(dates[i].slice(0, 4));
+        const badgeNouveau = annee >= anneeCourante - 1
+            ? '<span class="badge-nouveau">Nouveau</span>'
+            : '';
 
-        const titreElement = document.createElement('h3');
-        titreElement.classList.add('film-titre');
-        titreElement.textContent = film.titre;
+        const titreSafe = echapper(titres[i]);
 
-        const infosElement = document.createElement('div');
-        infosElement.classList.add('film-infos');
+        const morceaux = dates[i].split('-');
+        const dateFr = `${morceaux[2]}/${morceaux[1]}/${morceaux[0]}`;
 
-        const dateElement = document.createElement('p');
-        dateElement.textContent = `Date de sortie : ${film.date}`;
+        const numero = String(i + 1).padStart(3, '0');
 
-        const genreElement = document.createElement('p');
-        genreElement.textContent = `Genre : ${film.genre}`;
+        html += `
+            <article class="film">
+                <div class="film-affiche">
+                    <img src="${echapper(images[i])}" alt="Affiche du film ${titreSafe}">
+                    ${badgeNouveau}
+                </div>
+                <p class="film-numero">N° ${numero}</p>
+                <h3 class="film-titre">${titreSafe}</h3>
+                <div class="film-infos">
+                    <span>${echapper(dateFr)}</span>
+                    <span>${echapper(genres[i])}</span>
+                </div>
+                <button type="button" class="film-supprimer" data-index="${i}" aria-label="Supprimer ${titreSafe}">Retirer</button>
+            </article>
+        `;
+    }
 
-        infosElement.appendChild(dateElement);
-        infosElement.appendChild(genreElement);
-
-        const supprimerBouton = document.createElement('button');
-        supprimerBouton.type = 'button';
-        supprimerBouton.classList.add('film-supprimer');
-        supprimerBouton.textContent = '×';
-        supprimerBouton.setAttribute('aria-label', `Supprimer ${film.titre}`);
-        supprimerBouton.addEventListener('click', () => supprimerFilm(film));
-
-        filmElement.appendChild(imageElement);
-        filmElement.appendChild(titreElement);
-        filmElement.appendChild(infosElement);
-        filmElement.appendChild(supprimerBouton);
-
-        container.appendChild(filmElement);
-    });
+    container.innerHTML = html !== ''
+        ? html
+        : '<p class="vide">Aucun film à afficher.</p>';
 }
 
-function supprimerFilm(film) {
-    if (!confirm(`Supprimer « ${film.titre} » du catalogue ?`)) {
+
+function supprimerFilm(index) {
+    if (!confirm(`Supprimer « ${titres[index]} » du catalogue ?`)) {
         return;
     }
 
-    films = films.filter(f => f !== film);
+    titres.splice(index, 1);
+    dates.splice(index, 1);
+    genres.splice(index, 1);
+    images.splice(index, 1);
+
     sauvegarderFilms();
-
-    filtrerFilms();
+    afficherFilms();
+    afficherStats();
 }
 
-function filtrerFilms() {
-    const recherche = rechercheInput.value.toLowerCase();
 
-    const resultats = films.filter(film =>
-        film.titre.toLowerCase().includes(recherche)
-    );
+function afficherStats() {
+    document.querySelector('#stat-total').textContent = titres.length;
 
-    afficherFilms(resultats);
+    const nomsGenres = [];
+    const compteurs = [];
+
+    for (let i = 0; i < genres.length; i++) {
+        const position = nomsGenres.indexOf(genres[i]);
+
+        if (position === -1) {
+            nomsGenres.push(genres[i]);
+            compteurs.push(1);
+        } else {
+            compteurs[position]++;
+        }
+    }
+
+    document.querySelector('#stat-genres').textContent = nomsGenres.length;
+
+    let indexTop = 0;
+    for (let i = 1; i < compteurs.length; i++) {
+        if (compteurs[i] > compteurs[indexTop]) {
+            indexTop = i;
+        }
+    }
+
+    document.querySelector('#stat-top-genre').textContent =
+        nomsGenres.length > 0 ? nomsGenres[indexTop] : '–';
+
+    let indexRecent = -1;
+    for (let i = 0; i < dates.length; i++) {
+        if (indexRecent === -1 || dates[i] > dates[indexRecent]) {
+            indexRecent = i;
+        }
+    }
+
+    document.querySelector('#stat-recent').textContent =
+        indexRecent !== -1 ? titres[indexRecent] : '–';
 }
+
 
 form.addEventListener('submit', ajouterFilm);
-rechercheInput.addEventListener('input', filtrerFilms);
+rechercheInput.addEventListener('input', afficherFilms);
 
-afficherFilms(films);
+container.addEventListener('click', event => {
+    const bouton = event.target.closest('.film-supprimer');
+
+    if (bouton) {
+        supprimerFilm(Number(bouton.dataset.index));
+    }
+});
+
+
+chargerFilms();
+ajouterFilmsDeBase();
+afficherFilms();
+afficherStats();
